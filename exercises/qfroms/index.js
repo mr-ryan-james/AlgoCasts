@@ -12,8 +12,38 @@
 //     q.remove(); // returns 1
 //     q.remove(); // returns 2
 
-const Stack = require('./stack');
+const Stack = require("./stack");
 
-class Queue {}
+class Queue {
+  // when we remove things, transfer them to the left, and remove from the right
+  // (resetting the right stack)
+  leftStack = new Stack();
+
+  //put all elements on the right stack
+  rightStack = new Stack();
+
+  add(thing) {
+    this.rightStack.push(thing);
+  }
+
+  transfer() {
+    if (this.leftStack.peek() === undefined) {
+      while (this.rightStack.peek()) {
+        this.leftStack.push(this.rightStack.pop());
+      }
+      this.rightStack = new Stack();
+    }
+  }
+
+  remove() {
+    this.transfer();
+    return this.leftStack.pop();
+  }
+
+  peek() {
+    this.transfer();
+    return this.leftStack.peek();
+  }
+}
 
 module.exports = Queue;
